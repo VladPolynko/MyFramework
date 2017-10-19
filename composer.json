@@ -1,0 +1,14 @@
+{
+    "name": "vlad/first",
+    "require": {
+        "silex/silex": "^2.2",
+        "symfony/symfony": "^3.3",
+        "symfony/http-foundation": "^3.3"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "first\\": ""
+        }
+    }
+}
