@@ -5,24 +5,25 @@ namespace Simplex;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 class Framework
 {
     protected $matcher;
-    protected $controllerResolver;
+    protected $resolver;
     protected $argumentResolver;
 
     public function __construct(
-        UrlMatcher $matcher,
-        ControllerResolver $controllerResolver,
-        ArgumentResolver $argumentResolver
+        UrlMatcherInterface $matcher,
+        ControllerResolverInterface $resolver,
+        ArgumentResolverInterface $argumentResolver
     )
     {
         $this->matcher = $matcher;
-        $this->controllerResolver = $controllerResolver;
+        $this->resolver = $resolver;
         $this->argumentResolver = $argumentResolver;
     }
 
@@ -33,7 +34,7 @@ class Framework
         try {
             $request->attributes->add($this->matcher->match($request->getPathInfo()));
 
-            $controller = $this->controllerResolver->getController($request);
+            $controller = $this->resolver->getController($request);
             $arguments = $this->argumentResolver->getArguments($request, $controller);
 
             return call_user_func_array($controller, $arguments);
